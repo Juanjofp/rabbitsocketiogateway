@@ -1,6 +1,10 @@
-import Gateway from './libs/gateway';
-import Service from './libs/service';
-import Client from './libs/client';
+import GatewayLib from './libs/gateway';
+import ServiceLib from './libs/service';
+import ClientLib from './libs/client';
+
+export const Gateway = GatewayLib;
+export const Service = ServiceLib;
+export const Client = ClientLib;
 
 export default {
     /*
