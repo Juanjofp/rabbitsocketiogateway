@@ -1,0 +1,31 @@
+{
+  "name": "rabbitsocketiogateway",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/main.js",
+  "dependencies": {
+    "amqplib": "^0.4.2",
+    "socket.io": "^1.5.0",
+    "socket.io-client": "^1.5.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.16.0",
+    "babel-eslint": "^7.0.0",
+    "babel-preset-es2015": "^6.16.0",
+    "babel-preset-stage-2": "^6.17.0",
+    "eslint": "^3.8.0",
+    "nodemon": "^1.11.0"
+  },
+  "scripts": {
+    "server": "cd src && nodemon main.js --exec babel-node",
+    "build": "babel src -d build",
+    "prepublish": "npm run build",
+    "start-server": "cd src && babel-node main.js",
+    "start": "cd src && nodemon main.js --exec babel-node",
+    "gwsample": "cd samples && babel-node gwsample.js",
+    "mssample": "cd samples && babel-node mssample.js",
+    "clientsample": "cd samples && babel-node clientsample.js"
+  },
+  "author": "juanjofp",
+  "license": "ISC"
+}
