@@ -27,5 +27,10 @@
     "clientsample": "cd samples && babel-node clientsample.js"
   },
   "author": "juanjofp",
+  "repository" :
+  {
+      "type" : "git",
+      "url" : "https://github.com/Juanjofp/rabbitsocketiogateway.git"
+  },
   "license": "ISC"
 }
