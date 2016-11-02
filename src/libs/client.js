@@ -4,7 +4,9 @@ export default function connectIO(
     {
         protocol = 'ws',
         server = 'localhost',
-        port = '8080'
+        port = '8080',
+        onData,
+        onError
     } = {}
 ) {
     const URL = `${protocol}://${server}:${port}/`;
@@ -29,25 +31,16 @@ export default function connectIO(
         console.log('io data received', data);
     }
 
-    socket.on('connect_error', errorIO);
-    socket.on('connect_timeout', errorIO);
-    socket.on('reconnect_error', errorIO);
+    socket.on('connect_error', onError || errorIO);
+    socket.on('connect_timeout', onError || errorIO);
+    socket.on('reconnect_error', onError || errorIO);
     socket.on('connect', function() {
         console.log('sockket IO connected');
-        socket.on('error', errorConnection);
+        socket.on('error', onError || errorConnection);
         socket.on('disconnect', function() {
             console.log('disconected io');
         });
-        socket.on('data', dataReceived);
-        socket.emit(
-            'actions',
-            {
-                target: 'MSUSERS',
-                type: 'LOGIN',
-                username: 'juanjo',
-                passwd: '123456'
-            }
-        );
+        socket.on('data', onData || dataReceived);
     });
 
     return function(

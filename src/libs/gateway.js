@@ -96,7 +96,7 @@ export default function startGateway(
                                 action: action to send
                             }
                             */
-                            let service = action.target || 'DEFAULT',
+                            let service = action.service || 'DEFAULT',
                                 room = action.room || 'DEFAULT';
                             delete action.target;
                             delete action.room;
