@@ -48,6 +48,7 @@ export default function initService(
                         room: id de la room
                         client: id del cliente
                         action: {
+                            action: {} // Action for gateway, to take care
                             service: {} // Action for all user of service
                             room: {} // Action for all user of room
                             client: {} // Action for user that send this request

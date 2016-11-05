@@ -4,7 +4,7 @@ var sendAction = Client();
 
 setInterval(
     () => {
-        sendAction('MSUSER', 'DEFAULT', {type: 'LOGIN', username: 'juanjo', password: '123456'});
+        sendAction('DEFAULT', 'DEFAULT', {type: 'LOGIN', username: 'juanjo', password: '123456'});
     },
     15000
 );

@@ -67,8 +67,12 @@ export default function startGateway(
             io.to(response.clientId).emit('data', responseClient(response.client));
         }
 
-        if (response.action === 'exit') {
-            leaveFromService(response.clientId, response.serviceId, response.roomId);
+        // if service send action to be proccess by gateway
+        // May be it could be done by customs gateways?
+        if (response.action) {
+            if (response.action.type === 'exit') {
+                leaveFromService(response.clientId, response.serviceId, response.roomId);
+            }
         }
     }
 
@@ -85,20 +89,17 @@ export default function startGateway(
                         'actions',
                         (action) => {
                             console.log('Action from client', action, socket.id);
-                            // TODO: Check action and user
-                            // If user has access to MS then join to MS channel
-                            // and mantain its private channel
                             // action should shape as:
                             /*
                             {
-                                target: MSName,
+                                service: MSName,
                                 room: RoomName
-                                action: action to send
+                                action: action to send to MS
                             }
                             */
                             let service = action.service || 'DEFAULT',
                                 room = action.room || 'DEFAULT';
-                            delete action.target;
+                            delete action.service;
                             delete action.room;
                             joinToService(socket, service, room);
                             // Send action to MS
