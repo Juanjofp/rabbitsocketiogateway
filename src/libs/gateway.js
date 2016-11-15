@@ -26,16 +26,22 @@ export default function startGateway(
         }
     }
 
-    function leaveFromRoom(socket, room) {
-        socket.leave(room);
-        console.log(socket.id, 'left room', room);
-    }
-
-    function leaveFromService(socketId, service, room) {
+    function leaveFromService(socketId, service) {
         let socket = io.sockets.socket(socketId);
         if (!socket) return;
-        leaveFromRoom(socket, service);
-        leaveFromRoom(socket, `${service}#${room}`);
+        for (let room in socket.rooms) {
+            if (room.startsWith(service)) {
+                socket.leave(room);
+                console.log(socket.id, 'left room', room);
+            }
+        }
+        socket.leave(service);
+    }
+
+    function leaveFromRoom(socketId, service, room) {
+        let socket = io.sockets.socket(socketId);
+        if (!socket) return;
+        socket.leave(`${service}#${room}`);
     }
 
     function joinToRoom(socket, room) {
@@ -70,8 +76,13 @@ export default function startGateway(
         // if service send action to be proccess by gateway
         // May be it could be done by customs gateways?
         if (response.action) {
-            if (response.action.type === 'exit') {
-                leaveFromService(response.clientId, response.serviceId, response.roomId);
+            if (response.action.type === 'EXIT') {
+                if (response.action.room === 'all') {
+                    leaveFromService(response.clientId, response.serviceId);
+                }
+                else {
+                    leaveFromRoom(response.clientId, response.serviceId, response.roomId);
+                }
             }
         }
     }
