@@ -27,16 +27,22 @@ export default function startGateway(
         }
     }
 
-    function leaveFromRoom(socket, room) {
-        socket.leave(room);
-        console.log(socket.id, 'left room', room);
-    }
-
-    function leaveFromService(socketId, service, room) {
+    function leaveFromService(socketId, service) {
         let socket = io.sockets.socket(socketId);
         if (!socket) return;
-        leaveFromRoom(socket, service);
-        leaveFromRoom(socket, `${service}#${room}`);
+        for (let room in socket.rooms) {
+            if (room.startsWith(service)) {
+                socket.leave(room);
+                console.log(socket.id, 'left room', room);
+            }
+        }
+        socket.leave(service);
+    }
+
+    function leaveFromRoom(socketId, service, room) {
+        let socket = io.sockets.socket(socketId);
+        if (!socket) return;
+        socket.leave(`${service}#${room}`);
     }
 
     function joinToRoom(socket, room) {
@@ -79,7 +85,12 @@ export default function startGateway(
                     break;
                 case type === '@@EXIT':
                     // TODO: Take out the client from the service
-                    leaveFromService(response.clientId, response.serviceId, response.roomId);
+                    if (response.action.room === 'all') {
+                        leaveFromService(response.clientId, response.serviceId);
+                    }
+                    else {
+                        leaveFromRoom(response.clientId, response.serviceId, response.roomId);
+                    }
                     break;
                 default:
                     // This action must be proccess by the gateway
