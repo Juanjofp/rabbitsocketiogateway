@@ -34,13 +34,5 @@ export default {
         client: {} // Action for user that send this request
     }
     */
-    Service,
-    /*
-    {
-        protocol = 'ws',
-        server = 'localhost',
-        port = '8080',
-        onData,
-        onError
-    }
+    Service
 };
