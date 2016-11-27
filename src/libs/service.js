@@ -5,17 +5,6 @@ import AMQP from 'amqplib/callback_api';
 const REQUEST = 'ex_request';
 const RESPONSE = 'ex_response';
 
-function consumeQueue(ch, msg, route, action) {
-    ch.ack(msg);
-    console.log('Response>', route, action);
-    let data = JSON.parse(action);
-    data.clientId = data.client;
-    data.client = {
-        token: '123456'
-    };
-    ch.publish(RESPONSE, '', new Buffer(JSON.stringify(data)));
-}
-
 function defaultResponse(action, response) {
     console.log('Receive>', action);
     response(action.service, action.room, action.client, {type: '@@DEFAULT'});
@@ -58,7 +47,7 @@ export default function initService(
                             serviceId: service,
                             roomId: room,
                             clientId: client,
-                            ...action
+                            action
                         };
                         ch.publish(RESPONSE, '', new Buffer(JSON.stringify(data)));
                     }
@@ -90,6 +79,15 @@ export default function initService(
                             }, {noAck: false});
                         }
                     );
+
+                    // Send firt message to gateway, to say it is availabe
+                    var initialData = {
+                        serviceId: name,
+                        action: {
+                            type: '@@INIT'
+                        }
+                    };
+                    ch.publish(RESPONSE, '', new Buffer(JSON.stringify(initialData)));
 
                     resolve({
                         sendAction: sendActionToGateway

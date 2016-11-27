@@ -13,6 +13,7 @@ export default {
         responseService: Procesa la respuesta que viene del MS y se enviará a todos los clientes suscritos a este MS por socketIO en 'data'
         responseRoom: Procesa la respuesta que viene del MS y se enviará a todos los clinetes suscritos a esta Room de este MS por socketIO en 'data'
         responseClient: Procesa la respuesta que viene del MS y se enviará a este cliente por socketIO en 'data'
+        responseGateway: Procesa la respuesta que viene del MS y es para que actué el gateway, no se reenvia a nadie
         portIO: puerto en el que escucha SocketIO, 8080
         serverRabbit: url donde se encuentra RabbitMQ
     }

@@ -14,6 +14,7 @@ export default function startGateway(
         responseService = throwAway,
         responseRoom = throwAway,
         responseClient = throwAway,
+        responseGateway = throwAway,
         portIO = 8080,
         serverRabbit = 'amqp://localhost'
     } = {}
@@ -69,9 +70,20 @@ export default function startGateway(
 
         // if service send action to be proccess by gateway
         // May be it could be done by customs gateways?
-        if (response.action) {
-            if (response.action.type === 'exit') {
-                leaveFromService(response.clientId, response.serviceId, response.roomId);
+        if (response.action && response.action.type) {
+            const type = response.action.type;
+            switch (true) {
+                case type === '@@INIT':
+                    // TODO: Add Service to list of availables services
+                    console.log(response.serviceId, response.action);
+                    break;
+                case type === '@@EXIT':
+                    // TODO: Take out the client from the service
+                    leaveFromService(response.clientId, response.serviceId, response.roomId);
+                    break;
+                default:
+                    // This action must be proccess by the gateway
+                    responseGateway(response.action);
             }
         }
     }
