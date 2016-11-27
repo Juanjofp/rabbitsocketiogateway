@@ -47,7 +47,7 @@ export default function initService(
                             serviceId: service,
                             roomId: room,
                             clientId: client,
-                            action
+                            ...action
                         };
                         ch.publish(RESPONSE, '', new Buffer(JSON.stringify(data)));
                     }
