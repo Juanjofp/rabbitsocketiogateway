@@ -1,10 +1,8 @@
 import GatewayLib from './libs/gateway';
 import ServiceLib from './libs/service';
-import ClientLib from './libs/client';
 
 export const Gateway = GatewayLib;
 export const Service = ServiceLib;
-export const Client = ClientLib;
 
 export default {
     /*
@@ -45,10 +43,4 @@ export default {
         onData,
         onError
     }
-    devuelve la función sendAction(service, room, action)
-    service = 'DEFAULT', // Servicio al que comunicar
-    room = 'DEFAULT', // Room con la que comunicar
-    action = {} // Accion a enviar
-    */
-    Client
 };
