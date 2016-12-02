@@ -7,7 +7,7 @@ const RESPONSE = 'ex_response';
 
 function defaultResponse(action, response) {
     console.log('Receive>', action);
-    response(action.service, action.room, action.client, {type: '@@DEFAULT'});
+    response({type: '@@DEFAULT'});
 }
 
 export default function initService(
@@ -71,10 +71,19 @@ export default function initService(
                             // Consumimos los mensajes del intercambiador
                             ch.consume(q.queue, function(msg) {
                                 // Recibimos el mensaje, lo procesamos y lo devolvemos
-                                let newAction = msg.content.toString();
+                                let newAction = msg.content.toString(),
+                                    newActionParsed = JSON.parse(newAction);
                                 console.log('REQUEST >', msg.fields.routingKey, newAction);
                                 // Procesamos la peticion
-                                requestFromGateway(JSON.parse(newAction), sendActionToGateway);
+                                requestFromGateway(
+                                    newActionParsed,
+                                    sendActionToGateway.bind(
+                                        Object.create(null),
+                                        newActionParsed.service,
+                                        newActionParsed.room,
+                                        newActionParsed.client
+                                    )
+                                );
 
                             }, {noAck: false});
                         }

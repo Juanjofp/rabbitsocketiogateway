@@ -24,14 +24,12 @@ export default {
         name = name of the micro service, default 'DEFAULT',
         requestFromGateway = callback to proccess request from gateway, default (action, response) => console.log('Receive>', action); response(action);
     }
-    Promise q devuelve objeto service con sendAction: function(service, room, client, action)
-    service: id del servicio
-    room: id de la room
-    client: id del cliente
+    Promise q devuelve objeto service con sendAction: function(action)
     action: {
         service: {} // Action for all user of service
         room: {} // Action for all user of room
         client: {} // Action for user that send this request
+        action: {} // Action to be consumed by gateway
     }
     */
     Service

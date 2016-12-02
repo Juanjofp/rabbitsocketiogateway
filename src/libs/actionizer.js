@@ -34,10 +34,11 @@ export default function createActionizer(server, responseCallback) {
                     ch.bindQueue(q.queue, RESPONSE, '');
 
                     ch.consume(q.queue, function(msg) {
-                        console.log('ACTIONIZER MQTT RESPONSE', JSON.parse(msg.content.toString()));
+                        const actionToService = JSON.parse(msg.content.toString());
+                        console.log('ACTIONIZER MQTT RESPONSE', actionToService);
                         // TODO Replace for a distpatcher which update a store
                         // then roomer subscribe to store
-                        responseCallback(JSON.parse(msg.content.toString()));
+                        responseCallback(actionToService);
                     }, {noAck: true});
                 });
 

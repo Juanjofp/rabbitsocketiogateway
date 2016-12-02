@@ -23,7 +23,6 @@ export default function startGateway(
     function leaveAllRooms(socket) {
         for (let room in socket.rooms) {
             socket.leave(room);
-            console.log(socket.id, 'left room', room);
         }
     }
 
@@ -33,7 +32,6 @@ export default function startGateway(
         for (let room in socket.rooms) {
             if (room.startsWith(service)) {
                 socket.leave(room);
-                console.log(socket.id, 'left room', room);
             }
         }
         socket.leave(service);
@@ -47,11 +45,9 @@ export default function startGateway(
 
     function joinToRoom(socket, room) {
         if (room in socket.rooms) {
-            console.log('Already', socket.id, 'in', room);
             return;
         }
         socket.join(room);
-        console.log(socket.id, 'join room', room);
     }
 
     function joinToService(socket, service, room) {
@@ -85,12 +81,18 @@ export default function startGateway(
                     break;
                 case type === '@@EXIT':
                     // TODO: Take out the client from the service
-                    if (response.action.room === 'all') {
+                    if (response.action.room === 'ALL') {
                         leaveFromService(response.clientId, response.serviceId);
+                        // Notify to client it has leave the service?
                     }
                     else {
                         leaveFromRoom(response.clientId, response.serviceId, response.roomId);
+                        // Notify to client it has leave the room?
                     }
+                    break;
+                case type === '@@REDIRECT':
+                    // TODO: Send actions to a MS
+                    console.log(response.serviceId, response.action);
                     break;
                 default:
                     // This action must be proccess by the gateway
