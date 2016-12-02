@@ -28,7 +28,7 @@ export default function startGateway(
     }
 
     function leaveFromService(socketId, service) {
-        let socket = io.sockets.socket(socketId);
+        let socket = io.sockets.connected[socketId];
         if (!socket) return;
         for (let room in socket.rooms) {
             if (room.startsWith(service)) {
@@ -40,7 +40,7 @@ export default function startGateway(
     }
 
     function leaveFromRoom(socketId, service, room) {
-        let socket = io.sockets.socket(socketId);
+        let socket = io.sockets.connected[socketId];
         if (!socket) return;
         socket.leave(`${service}#${room}`);
     }
