@@ -15,7 +15,7 @@ export default function startGateway(
         responseRoom = throwAway,
         responseClient = throwAway,
         responseGateway = throwAway,
-        portIO = 8080,
+        portIO = 8001,
         serverRabbit = 'amqp://localhost'
     } = {}
 ) {
