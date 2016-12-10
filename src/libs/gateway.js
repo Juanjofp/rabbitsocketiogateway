@@ -90,7 +90,7 @@ export default function startGateway(
                         // Notify to client it has leave the room?
                     }
                     break;
-                case type === '@@REDIRECT':
+                case type === '@@FORWARD':
                     // TODO: Send actions to a MS
                     console.log(response.serviceId, response.action);
                     break;

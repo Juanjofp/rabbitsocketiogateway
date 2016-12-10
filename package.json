@@ -1,6 +1,6 @@
 {
   "name": "rabbitsocketiogateway",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "",
   "main": "build/main.js",
   "dependencies": {
@@ -25,7 +25,7 @@
     "mssample": "cd samples && babel-node mssample.js",
     "mssample2": "cd samples && babel-node mssample2.js"
   },
-  "author": "juanjofp",
+  "author": "juanjofp,francescorivola",
   "repository" :
   {
       "type" : "git",
