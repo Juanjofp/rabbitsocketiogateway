@@ -1,24 +1,12 @@
 import Service from '../src/libs/service';
 
 const requestFromGateway = (action, response) => {
-    console.log('MSUSERS', action);
+    console.log('Info MS', action);
     let responseAction = {
-        service: {
-            type: 'MSUSERS_ACK'
+        client: {
+            type: 'INFO_ACK'
         }
     };
-
-    if (action.type === 'FORWARD') {
-        responseAction.action = {
-            type: '@@FORWARD',
-            action: {
-                service: 'MSINFO',
-                room: 'DEFAULT',
-                client: action.client,
-                'type': 'DO_NOTHING'
-            }
-        };
-    }
 
     if (action.type === 'EXIT') {
         responseAction.action = {
@@ -31,7 +19,7 @@ const requestFromGateway = (action, response) => {
 };
 
 Service({
-    name: 'MSUSERS',
+    name: 'MSINFO',
     requestFromGateway: requestFromGateway
 })
 .catch(

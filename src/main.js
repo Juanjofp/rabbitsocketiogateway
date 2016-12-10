@@ -7,6 +7,7 @@ export const Service = ServiceLib;
 export default {
     /*
     {
+        requestService: Procesa las peticiones de un MS a otro (client, servicioOrigen, RoomServicioOrigen, action) => action
         requestClient: Procesa las peticiones que vienen por socketIO en el evento 'actions'
         responseService: Procesa la respuesta que viene del MS y se enviará a todos los clientes suscritos a este MS por socketIO en 'data'
         responseRoom: Procesa la respuesta que viene del MS y se enviará a todos los clinetes suscritos a esta Room de este MS por socketIO en 'data'

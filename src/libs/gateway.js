@@ -6,10 +6,15 @@ let server = http.createServer(),
     io = socketIO(server),
     throwAway = function(data) {
         return data;
+    },
+    throwAwayService = function(client, service, room, action) {
+        console.log('Request from service', client, service, room, action);
+        return action;
     };
 
 export default function startGateway(
     {
+        requestService = throwAwayService,
         requestClient = throwAway,
         responseService = throwAway,
         responseRoom = throwAway,
@@ -55,7 +60,7 @@ export default function startGateway(
         joinToRoom(socket, `${service}#${room}`);
     }
 
-    function microservicesResponse(response) {
+    function microservicesResponse(response, actionizer) {
         console.log('Response received from MS', response);
         // Response for all clients in MS
         if (response.service) {
@@ -74,6 +79,7 @@ export default function startGateway(
         // May be it could be done by customs gateways?
         if (response.action && response.action.type) {
             const type = response.action.type;
+            console.log('Action ', type);
             switch (true) {
                 case type === '@@INIT':
                     // TODO: Add Service to list of availables services
@@ -91,8 +97,33 @@ export default function startGateway(
                     }
                     break;
                 case type === '@@FORWARD':
+                    console.log('FORWARD', response.serviceId, response.action);
                     // TODO: Send actions to a MS
-                    console.log(response.serviceId, response.action);
+                    // Shape:
+                    /**
+                    {
+                        type: '@@FORWARD',
+                        action:
+                        {
+                            service: 'MSINFO',
+                            room: 'DEFAULT',
+                            client: '5pucRgnj9Rfp9S3XAAAA',
+                            type: 'DO_NOTHING'
+                        }
+                    }
+                    **/
+                    let action = response.action.action,
+                        fromClient = action.client,
+                        toService = action.service,
+                        toRoom = action.room,
+                        actionToForward = requestService(response.clientId, response.serviceId, response.roomId, action);
+
+                    console.log('requestService', actionToForward, action);
+
+                    delete actionToForward.client;
+                    delete actionToForward.service;
+                    delete actionToForward.room;
+                    actionizer(fromClient, toService, toRoom, actionToForward);
                     break;
                 default:
                     // This action must be proccess by the gateway

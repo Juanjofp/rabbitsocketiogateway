@@ -28,19 +28,6 @@ export default function createActionizer(server, responseCallback) {
                     return;
                 }
                 console.log('Channel created');
-                // Indicamos el intercambiador para recibir las respuestas
-                ch.assertExchange(RESPONSE, 'fanout', {durable: false});
-                ch.assertQueue('', {exclusive: true}, function(err, q) {
-                    ch.bindQueue(q.queue, RESPONSE, '');
-
-                    ch.consume(q.queue, function(msg) {
-                        const actionToService = JSON.parse(msg.content.toString());
-                        console.log('ACTIONIZER MQTT RESPONSE', actionToService);
-                        // TODO Replace for a distpatcher which update a store
-                        // then roomer subscribe to store
-                        responseCallback(actionToService);
-                    }, {noAck: true});
-                });
 
                 // Indicamos el intercambiador de REQUEST para enviar las acciones
                 ch.assertExchange(REQUEST, 'topic', {durable: false});
@@ -56,6 +43,20 @@ export default function createActionizer(server, responseCallback) {
                     };
                     publishObject(ch, topic, msg);
                 };
+
+                // Indicamos el intercambiador para recibir las respuestas
+                ch.assertExchange(RESPONSE, 'fanout', {durable: false});
+                ch.assertQueue('', {exclusive: true}, function(err, q) {
+                    ch.bindQueue(q.queue, RESPONSE, '');
+
+                    ch.consume(q.queue, function(msg) {
+                        const actionToService = JSON.parse(msg.content.toString());
+                        console.log('ACTIONIZER MQTT RESPONSE', actionToService);
+                        // TODO Replace for a distpatcher which update a store
+                        // then roomer subscribe to store
+                        responseCallback(actionToService, actzer);
+                    }, {noAck: true});
+                });
                 console.log('Rabbit init ... DONE');
                 resolve(actzer);
             });
