@@ -22,7 +22,8 @@
     "start-server": "cd src && babel-node main.js",
     "start": "cd src && nodemon main.js --exec babel-node",
     "gwsample": "cd samples && babel-node gwsample.js",
-    "mssample": "cd samples && babel-node mssample.js"
+    "mssample": "cd samples && babel-node mssample.js",
+    "mssample2": "cd samples && babel-node mssample2.js"
   },
   "author": "juanjofp",
   "repository" :

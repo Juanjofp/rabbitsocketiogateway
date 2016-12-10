@@ -9,6 +9,17 @@ const requestFromGateway = (action, response) => {
 
     if (action.type === 'EXIT') {
         responseAction.action = {
+            type: '@@FORWARD',
+            service: 'MSINFO',
+            room: 'DEFAULT',
+            action: {
+                'type': 'DO_NOTHING'
+            }
+        };
+    }
+
+    if (action.type === 'EXIT') {
+        responseAction.action = {
             type: '@@EXIT',
             room: 'ALL'
         };
