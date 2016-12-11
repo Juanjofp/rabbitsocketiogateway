@@ -45,8 +45,8 @@ export default function initService(
                         */
                         var data = {
                             serviceId: service,
-                            roomId: room,
-                            clientId: client,
+                            roomId: action.roomId || room,
+                            clientId: action.clientId || client,
                             ...action
                         };
                         ch.publish(RESPONSE, '', new Buffer(JSON.stringify(data)));
@@ -99,7 +99,10 @@ export default function initService(
                     ch.publish(RESPONSE, '', new Buffer(JSON.stringify(initialData)));
 
                     resolve({
-                        sendAction: sendActionToGateway
+                        sendAction: sendActionToGateway.bind(
+                            Object.create(null),
+                            name
+                        )
                     });
                 });
             });
