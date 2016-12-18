@@ -64,15 +64,36 @@ export default function startGateway(
         console.log('Response received from MS', response);
         // Response for all clients in MS
         if (response.service) {
-            io.to(response.serviceId).emit('data', responseService(response.service));
+            let serviceAction = responseService(response.service);
+            if (serviceAction) {
+                // last chance to gateway to cancel action
+                serviceAction.service = response.serviceId;
+                serviceAction.room = response.roomId;
+                serviceAction.client = response.clientId;
+                io.to(response.serviceId).emit('data', serviceAction);
+            }
         }
         // Response to room in service
         if (response.room) {
-            io.to(`${response.serviceId}#${response.roomId}`).emit('data', responseRoom(response.room));
+            let roomAction = responseRoom(response.room);
+            if (roomAction) {
+                // last chance to gateway to cancel action
+                roomAction.service = response.serviceId;
+                roomAction.room = response.roomId;
+                roomAction.client = response.clientId;
+                io.to(`${response.serviceId}#${response.roomId}`).emit('data', roomAction);
+            }
         }
         // Response only for this client
         if (response.client) {
-            io.to(response.clientId).emit('data', responseClient(response.client));
+            let clientAction = responseClient(response.client);
+            if (clientAction) {
+                // last chance to gateway to cancel action
+                clientAction.service = response.serviceId;
+                clientAction.room = response.roomId;
+                clientAction.client = response.clientId;
+                io.to(response.clientId).emit('data', clientAction);
+            }
         }
 
         // if service send action to be proccess by gateway
